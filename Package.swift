@@ -7,14 +7,14 @@ let package = Package(
     name: "Swift-Repo",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
+        .executable(
             name: "Swift-Repo",
             targets: ["Swift-Repo"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
-        .target(
+        .executableTarget(
             name: "Swift-Repo"),
         .testTarget(
             name: "Swift-RepoTests",
