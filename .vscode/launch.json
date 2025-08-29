@@ -12,24 +12,6 @@
             "args": [],
             "env": [],
             "cwd": "${workspaceRoot}"
-        },
-        {
-            "type": "swift",
-            "request": "launch",
-            "args": [],
-            "cwd": "${workspaceFolder:Swift-Repo}",
-            "name": "Debug Swift-Repo",
-            "program": "${workspaceFolder:Swift-Repo}/.build/debug/Swift-Repo",
-            "preLaunchTask": "swift: Build Debug Swift-Repo"
-        },
-        {
-            "type": "swift",
-            "request": "launch",
-            "args": [],
-            "cwd": "${workspaceFolder:Swift-Repo}",
-            "name": "Release Swift-Repo",
-            "program": "${workspaceFolder:Swift-Repo}/.build/release/Swift-Repo",
-            "preLaunchTask": "swift: Build Release Swift-Repo"
         }
     ]
 }
