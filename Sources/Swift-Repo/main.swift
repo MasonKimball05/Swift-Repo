@@ -45,7 +45,7 @@ print("All tasks completed ✅")
 
 
 func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
-    let queue = DispatchQueue(label: "com.example.sync", attributes: .concurrent)
+    let queue = DispatchQueue(label: "com.example.sync")
 
     queue.sync {
         print("[sync] starting sequental tasks")
