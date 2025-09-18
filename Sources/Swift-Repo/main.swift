@@ -14,8 +14,8 @@ Task {
     // Create a task group to run multiple child tasks concurrently and collect their results.
     await withTaskGroup(of: Int.self) { group in
         print("[root] creating child tasks")
-        // Schedule three child tasks that each sleep for 1 second and then return their index.
-        for i in 1...3 {
+        // Schedule five child tasks that each sleep for 1 second and then return their index.
+        for i in 1...5 {
             group.addTask {
                 print("  [child \(i)] scheduled")
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -42,3 +42,16 @@ CFRunLoopRun()
 
 // Final message indicating all tasks have completed successfully.
 print("All tasks completed ✅")
+
+
+func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
+    print("[sync] starting sequental work")
+    for i in 1...taskCount {
+        print("[sync \(i)] scheduled")
+        sleep(secondsPerTask)
+        print("  [sync \(i)] returned")
+    }
+    print("[sync] all tasks finished sequentially")
+}
+
+runSync()
