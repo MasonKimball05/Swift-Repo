@@ -7,10 +7,13 @@ import Foundation
 setbuf(stdout, nil)
 
 
+//Function version of the previous code allowing for reuse
+// Task allows async context to run, but async functions can be written above the entry of the context, basically im relearning how functions work
+
 
 func runAsync(){
     print("Starting…")
-    Task {
+    Task { //Enter the async context
         print("[root] async Task started")
 
         // Create a task group to run multiple child tasks concurrently and collect their results.
