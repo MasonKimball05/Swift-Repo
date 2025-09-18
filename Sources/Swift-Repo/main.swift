@@ -56,7 +56,7 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
             sleep(secondsPerTask)
             print("[sync task \(i)] completed")
         }
-        print("[sync] all sequental tasks completed ✅")
+        print("[sync] all sequential tasks completed ✅")
     }
 }
 
