@@ -72,7 +72,9 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
 func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     let queue = DispatchQueue(label: "com.example.priority")
     var numsList = numList
+    let group = DispatchGroup()
 
+    
     queue.sync {
         print("[async priority] starting tasks with priority")
         for i in 1...taskCount {
