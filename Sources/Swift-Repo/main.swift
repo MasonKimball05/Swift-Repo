@@ -107,6 +107,7 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
 
         
     }
+    group.wait()
     print("[priority] all priority tasks completed ✅" )
 }
 
