@@ -49,4 +49,49 @@ func runAsync(){
     print("All tasks completed ✅")
 }
 
+func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
+    let queue = DispatchQueue(label: "com.example.sync")
+    var syncNum: [Int] = []
+
+    queue.sync {
+        print("[sync] starting sequental tasks")
+        for i in 1...taskCount {
+            print("  [sync task \(i)] starting")
+            sleep(secondsPerTask)
+            print("[sync task \(i)] completed")
+            var numToAdd = Int.random(in: 1...200)
+            syncNum.append(numToAdd)
+        }
+        print("[sync] all sequential tasks completed ✅")
+    }
+    return syncNum 
+}
+
+
+
+func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
+    let queue = DispatchQueue(label: "com.example.priority")
+    var numsList = numList
+
+    queue.sync {
+        print("[async priority] starting tasks with priority")
+        for i in 1...taskCount {
+            let maxValue = numsList.max()!
+            let index = numsList.firstIndex(of: maxValue)!
+            let ei = numList.firstIndex(of: numsList[index])!
+            print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
+            sleep(secondsPerTask)
+            print("[priority task \(ei + 1)] completed")
+            numsList.remove(at: index)
+        }
+
+        print("[priority] all priority tasks completed ✅" )
+    }
+}
+
 runAsync()
+print()
+print()
+var list = runSync()
+runPriority(numList: list)
+
