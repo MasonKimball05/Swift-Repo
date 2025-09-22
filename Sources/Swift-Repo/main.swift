@@ -45,7 +45,6 @@ func runAsync() {
 // Final message indicating all tasks have completed successfully.
 print("All tasks completed ✅")
 
-
 func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
     let queue = DispatchQueue(label: "com.example.sync")
 
@@ -60,7 +59,34 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
     }
 }
 
+func runPriorityTest() {
+    let queue = DispatchQueue(label: "com.example.priority", attributes: .concurrent)
+    print("[priority test] starting concurrent tasks with varying priorities")
+
+    // Use QoSClass, not DispatchQoS
+    let priorities: [DispatchQoS] = [.userInteractive, .userInitiated, .default, .utility, .background]
+    let group = DispatchGroup()
+
+    for i in 1...5 {
+        let qos = priorities[(i - 1) % priorities.count]
+        group.enter()
+        queue.async(group: group, qos: qos) {
+            print("  [priority task \(i) - \(qos)] starting")
+            sleep(2)
+            print("[priority task \(i) - \(qos)] completed")
+            group.leave()
+        }
+    }
+
+    // Block until all async tasks finish
+    group.wait()
+    print("[priority test] all priority tasks finished")
+}
+
 runAsync()
 print()
 print()
 runSync()
+print()
+print()
+runPriorityTest()
