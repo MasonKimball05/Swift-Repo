@@ -74,7 +74,7 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     var numsList = numList
     let group = DispatchGroup()
 
-    
+    /*
     queue.sync {
         print("[async priority] starting tasks with priority")
         for i in 1...taskCount {
@@ -89,6 +89,25 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
 
         print("[priority] all priority tasks completed ✅" )
     }
+    */
+
+    print("[async priority] starting tasks with priority")
+    for i in 1...taskCount {
+	    let maxValue = numsList.max()!
+        let index = numsList.firstIndex(of: maxValue)!
+        let ei = numList.firstIndex(of: numsList[index])!
+        group.enter()
+        queue.async {
+            print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
+            sleep(secondsPerTask)
+            print("[priority task \(ei + 1)] completed")
+            numsList.remove(at: index)
+            group.leave()
+        }
+
+        
+    }
+    print("[priority] all priority tasks completed ✅" )
 }
 
 runAsync()
