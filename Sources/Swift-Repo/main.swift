@@ -93,11 +93,11 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
 
     print("[async priority] starting tasks with priority")
     for i in 1...taskCount {
-	    let maxValue = numsList.max()!
-        let index = numsList.firstIndex(of: maxValue)!
-        let ei = numList.firstIndex(of: numsList[index])!
         group.enter()
-        queue.async {
+        queue.async(group: group) {
+            let maxValue = numsList.max()!
+            let index = numsList.firstIndex(of: maxValue)!
+            let ei = numList.firstIndex(of: numsList[index])!
             print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
             sleep(secondsPerTask)
             print("[priority task \(ei + 1)] completed")
