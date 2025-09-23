@@ -59,21 +59,34 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
     }
 }
 
-func runPriorityTest() {
+// Short, readable name for a DispatchQoS
+func qosName(_ qos: DispatchQoS) -> String {
+    switch qos.qosClass {
+    case .userInteractive: return "userInteractive"
+    case .userInitiated:   return "userInitiated"
+    case .default:         return "default"
+    case .utility:         return "utility"
+    case .background:      return "background"
+    case .unspecified:     return "unspecified"
+    @unknown default:      return "unknown"
+    }
+}
+
+func runPriorityTest(taskCount: Int = 5, workSeconds: UInt32 = 2) {
     let queue = DispatchQueue(label: "com.example.priority", attributes: .concurrent)
     print("[priority test] starting concurrent tasks with varying priorities")
 
-    // Use QoSClass, not DispatchQoS
     let priorities: [DispatchQoS] = [.userInteractive, .userInitiated, .default, .utility, .background]
     let group = DispatchGroup()
 
-    for i in 1...5 {
+    for i in 1...taskCount {
         let qos = priorities[(i - 1) % priorities.count]
         group.enter()
         queue.async(group: group, qos: qos) {
-            print("  [priority task \(i) - \(qos)] starting")
-            sleep(2)
-            print("[priority task \(i) - \(qos)] completed")
+            let label = qosName(qos)
+            print("  [priority task \(i) - \(label)] starting")
+            sleep(workSeconds)
+            print("[priority task \(i) - \(label)] completed")
             group.leave()
         }
     }
