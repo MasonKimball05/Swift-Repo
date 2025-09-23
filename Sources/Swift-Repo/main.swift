@@ -91,7 +91,7 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     }
     */
 
-    print("[async priority] starting tasks with priority")
+    print("[priority] starting tasks with priority")
     for i in 1...taskCount {
         group.enter()
         queue.async(group: group) {
