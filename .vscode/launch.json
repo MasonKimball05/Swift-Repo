@@ -4,8 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
-
         {
             "type": "lldb-dap",
             "request": "launch",
@@ -14,6 +12,24 @@
             "args": [],
             "env": [],
             "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Swift-Repo}",
+            "name": "Debug Swift-Repo",
+            "program": "${workspaceFolder:Swift-Repo}/.build/debug/Swift-Repo",
+            "preLaunchTask": "swift: Build Debug Swift-Repo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Swift-Repo}",
+            "name": "Release Swift-Repo",
+            "program": "${workspaceFolder:Swift-Repo}/.build/release/Swift-Repo",
+            "preLaunchTask": "swift: Build Release Swift-Repo"
         }
     ]
 }
