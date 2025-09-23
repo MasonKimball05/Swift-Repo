@@ -1,20 +1,19 @@
-<<<<<<< Updated upstream
-print("Hello world")
-print("Testing line")
-print("I think I got it")
-=======
 import Foundation
+
 
 // This file demonstrates how to use Swift Concurrency with Task groups to run multiple asynchronous child tasks, collect their results, and coordinate completion.
 
 // Flush prints immediately to ensure output appears in real-time without buffering delays.
 setbuf(stdout, nil)
 
-print("Starting…")
 
-// Launch the async root task to manage child tasks concurrently.
-func runAsync() {    
-    Task {
+//Function version of the previous code allowing for reuse
+// Task allows async context to run, but async functions can be written above the entry of the context, basically im relearning how functions work
+
+
+func runAsync(){
+    print("Starting…")
+    Task { //Enter the async context
         print("[root] async Task started")
 
         // Create a task group to run multiple child tasks concurrently and collect their results.
@@ -45,14 +44,14 @@ func runAsync() {
 
     // Keep the main thread's runloop alive so Swift Concurrency can schedule tasks and run the async code.
     CFRunLoopRun()
+
+    // Final message indicating all tasks have completed successfully.
+    print("All tasks completed ✅")
 }
 
-// Final message indicating all tasks have completed successfully.
-print("All tasks completed ✅")
-
-
-func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
+func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
     let queue = DispatchQueue(label: "com.example.sync")
+    var syncNum: [Int] = []
 
     queue.sync {
         print("[sync] starting sequental tasks")
@@ -60,22 +59,61 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) {
             print("  [sync task \(i)] starting")
             sleep(secondsPerTask)
             print("[sync task \(i)] completed")
+            var numToAdd = Int.random(in: 1...200)
+            syncNum.append(numToAdd)
         }
         print("[sync] all sequential tasks completed ✅")
     }
+    return syncNum 
 }
 
 
 
+func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
+    let queue = DispatchQueue(label: "com.example.priority")
+    var numsList = numList
+    let group = DispatchGroup()
+
+    /*
+    queue.sync {
+        print("[async priority] starting tasks with priority")
+        for i in 1...taskCount {
+            let maxValue = numsList.max()!
+            let index = numsList.firstIndex(of: maxValue)!
+            let ei = numList.firstIndex(of: numsList[index])!
+            print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
+            sleep(secondsPerTask)
+            print("[priority task \(ei + 1)] completed")
+            numsList.remove(at: index)
+        }
+
+        print("[priority] all priority tasks completed ✅" )
+    }
+    */
+
+    print("[priority] starting tasks with priority")
+    for i in 1...taskCount {
+        group.enter()
+        queue.async(group: group) {
+            let maxValue = numsList.max()!
+            let index = numsList.firstIndex(of: maxValue)!
+            let ei = numList.firstIndex(of: numsList[index])!
+            print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
+            sleep(secondsPerTask)
+            print("[priority task \(ei + 1)] completed")
+            numsList.remove(at: index)
+            group.leave()
+        }
+
+        
+    }
+    group.wait()
+    print("[priority] all priority tasks completed ✅" )
+}
 
 runAsync()
 print()
 print()
-runSync()
+var list = runSync()
+runPriority(numList: list)
 
-var randoms: [Int] = []
-for _ in 1...5 {
-    randoms.append(Int.random(in: 1...10))
-}
-print(randoms)
->>>>>>> Stashed changes
