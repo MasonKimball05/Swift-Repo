@@ -72,7 +72,8 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
 func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     let queue = DispatchQueue(label: "com.example.priority")
     var numsList = numList
-    let group = DispatchGroup()
+    let group = DispatchGroup() // Add tasks to a group for concurrent execution
+
 
     /*
     queue.sync {
@@ -92,12 +93,12 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     */
 
     print("[priority] starting tasks with priority")
-    for i in 1...taskCount {
+    for i in 1...taskCount { //Runs for task count
         group.enter()
         queue.async(group: group) {
-            let maxValue = numsList.max()!
-            let index = numsList.firstIndex(of: maxValue)!
-            let ei = numList.firstIndex(of: numsList[index])!
+            let maxValue = numsList.max()! //Max value in list
+            let index = numsList.firstIndex(of: maxValue)! //Index of max value in mutable list
+            let ei = numList.firstIndex(of: numsList[index])! //Index of max value in original list
             print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
             sleep(secondsPerTask)
             print("[priority task \(ei + 1)] completed")
