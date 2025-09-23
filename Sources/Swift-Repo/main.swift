@@ -84,9 +84,9 @@ func runPriorityTest(taskCount: Int = 5, workSeconds: UInt32 = 2) {
         group.enter()
         queue.async(group: group, qos: qos) {
             let label = qosName(qos)
-            print("  [priority task \(i) - \(label)] starting")
+            print("    [priority task \(i) - \(label)] starting")
             sleep(workSeconds)
-            print("[priority task \(i) - \(label)] completed")
+            print("  [priority task \(i) - \(label)] completed")
             group.leave()
         }
     }
