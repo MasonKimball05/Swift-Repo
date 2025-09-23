@@ -59,7 +59,7 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
             print("  [sync task \(i)] starting")
             sleep(secondsPerTask)
             print("[sync task \(i)] completed")
-            var numToAdd = Int.random(in: 1...200)
+            let numToAdd = Int.random(in: 1...200)
             syncNum.append(numToAdd)
         }
         print("[sync] all sequential tasks completed ✅")
