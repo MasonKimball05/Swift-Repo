@@ -115,5 +115,7 @@ runAsync()
 print()
 print()
 var list = runSync()
+print()
+print()
 runPriority(numList: list)
 
