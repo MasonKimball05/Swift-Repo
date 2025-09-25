@@ -64,6 +64,7 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
         }
         print("[sync] all sequential tasks completed ✅")
     }
+    print(syncNum)
     return syncNum 
 }
 
@@ -116,5 +117,7 @@ runAsync()
 print()
 print()
 var list = runSync()
+print()
+print()
 runPriority(numList: list)
 
