@@ -11,7 +11,7 @@ setbuf(stdout, nil)
 // Task allows async context to run, but async functions can be written above the entry of the context, basically im relearning how functions work
 
 
-func runAsync(){
+func runAsync() {
     print("Starting…")
     Task { //Enter the async context
         print("[root] async Task started")
