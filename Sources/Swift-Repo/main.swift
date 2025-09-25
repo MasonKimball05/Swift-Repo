@@ -22,8 +22,10 @@ func runAsync(){
             // Schedule five child tasks that each sleep for 1 second and then return their index.
             for i in 1...5 {
                 group.addTask {
-                    print("  [child \(i)] scheduled")
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    print("    [child \(i)] scheduled")
+                    var seconds = UInt64(Int.random(in: 1...5))
+                    try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
+                    print("    [child \(i)] completed after \(seconds) seconds")
                     print("  [child \(i)] returning")
                     return i
                 }
