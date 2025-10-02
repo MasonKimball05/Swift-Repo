@@ -22,8 +22,10 @@ func runAsync(){
             // Schedule five child tasks that each sleep for 1 second and then return their index.
             for i in 1...5 {
                 group.addTask {
-                    print("  [child \(i)] scheduled")
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    print("    [child \(i)] scheduled")
+                    var seconds = UInt64(Int.random(in: 1...5))
+                    try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
+                    print("    [child \(i)] completed after \(seconds) seconds")
                     print("  [child \(i)] returning")
                     return i
                 }
@@ -64,11 +66,32 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
         }
         print("[sync] all sequential tasks completed ✅")
     }
+    print(syncNum)
     return syncNum 
 }
 
 
 
+/// Executes tasks in order of priority based on values in a provided array.
+///
+/// This function processes a specified number of tasks by selecting the highest priority task
+/// (determined by the highest value in the provided array) each time. Each task is executed
+/// asynchronously on a serial queue but the function waits for all tasks to complete before returning.
+///
+/// - Parameters:
+///   - taskCount: The number of tasks to execute. Default is 5.
+///   - secondsPerTask: The duration in seconds that each task should take to complete. Default is 1.
+///   - numList: An array of integers where each value represents the priority level of a task.
+///              Higher values indicate higher priority.
+///
+/// - Note: This implementation uses a dispatch group to track when all tasks have completed.
+///         The function will block the current thread until all tasks have finished.
+///
+/// ## Example usage:
+/// ```
+/// let priorities = [3, 1, 5, 2, 4]
+/// runPriority(taskCount: 3, secondsPerTask: 2, numList: priorities)
+/// ```
 func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     let queue = DispatchQueue(label: "com.example.priority")
     var numsList = numList
@@ -116,5 +139,6 @@ runAsync()
 print()
 print()
 var list = runSync()
+print()
+print()
 runPriority(numList: list)
-
