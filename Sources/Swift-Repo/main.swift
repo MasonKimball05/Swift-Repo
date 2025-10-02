@@ -23,7 +23,7 @@ func runAsync() {
             for i in 1...5 {
                 group.addTask {
                     print("    [child \(i)] scheduled")
-                    var seconds = UInt64(Int.random(in: 1...5))
+                    let seconds = UInt64(Int.random(in: 1...5))
                     try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
                     print("    [child \(i)] completed after \(seconds) seconds")
                     print("  [child \(i)] returning")
@@ -94,29 +94,10 @@ func runSync(taskCount: Int=5, secondsPerTask: UInt32=1) -> [Int] {
 func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     let queue = DispatchQueue(label: "com.example.priority")
     var numsList = numList
-    let group = DispatchGroup()
-
-    /*
-    queue.sync {
-        print("[async priority] starting tasks with priority")
-        for i in 1...taskCount {
-            let maxValue = numsList.max()!
-            let index = numsList.firstIndex(of: maxValue)!
-            let ei = numList.firstIndex(of: numsList[index])!
-            print("[priority task \(ei + 1)] starting; priority level: \(maxValue)")
-            sleep(secondsPerTask)
-            print("[priority task \(ei + 1)] completed")
-            numsList.remove(at: index)
-        }
-
-        print("[priority] all priority tasks completed ✅" )
-    }
-    */
 
     print("[priority] starting tasks with priority")
     for i in 1...taskCount {
-        group.enter()
-        queue.async(group: group) {
+        queue.async() {
             let maxValue = numsList.max()!
             let index = numsList.firstIndex(of: maxValue)!
             let ei = numList.firstIndex(of: numsList[index])!
@@ -124,12 +105,8 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
             sleep(secondsPerTask)
             print("[priority task \(ei + 1)] completed")
             numsList.remove(at: index)
-            group.leave()
         }
-
-        
     }
-    group.wait()
     print("[priority] all priority tasks completed ✅" )
 }
 
