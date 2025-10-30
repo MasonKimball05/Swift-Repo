@@ -19,8 +19,9 @@
             "args": [],
             "cwd": "${workspaceFolder:Swift-Repo}",
             "name": "Debug Swift-Repo",
-            "program": "${workspaceFolder:Swift-Repo}/.build/debug/Swift-Repo",
-            "preLaunchTask": "swift: Build Debug Swift-Repo"
+            "preLaunchTask": "swift: Build Debug Swift-Repo",
+            "target": "Swift-Repo",
+            "configuration": "debug"
         },
         {
             "type": "swift",
@@ -28,8 +29,9 @@
             "args": [],
             "cwd": "${workspaceFolder:Swift-Repo}",
             "name": "Release Swift-Repo",
-            "program": "${workspaceFolder:Swift-Repo}/.build/release/Swift-Repo",
-            "preLaunchTask": "swift: Build Release Swift-Repo"
+            "preLaunchTask": "swift: Build Release Swift-Repo",
+            "target": "Swift-Repo",
+            "configuration": "release"
         }
     ]
 }

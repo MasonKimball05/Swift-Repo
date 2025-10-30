@@ -132,6 +132,7 @@ func runPriority(taskCount: Int=5, secondsPerTask: UInt32=1, numList: [Int]) {
     print("[priority] all priority tasks completed ✅" )
 }
 
+/*
 runAsync()
 print()
 print()
@@ -139,3 +140,13 @@ var list = runSync()
 print()
 print()
 runPriority(numList: list)
+*/
+
+// MARK: - Run program
+let camera = takephoto()
+
+if camera.setupSession() {
+    camera.capturePhoto()
+} else {
+    print("❌ Camera setup failed")
+}
