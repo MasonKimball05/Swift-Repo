@@ -1,17 +1,17 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb-dap",
+            "name": "Debug Swift (CodeLLDB)",
+            "type": "lldb",
             "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceRoot}/<your program>",
+            "program": "${workspaceFolder}/.build/debug/Swift-Repo",
+            "cwd": "${workspaceFolder}",
             "args": [],
-            "env": [],
-            "cwd": "${workspaceRoot}"
+            "preLaunchTask": "swift: Build Debug Swift-Repo",
+            "env": {
+                "SWIFT_BACKTRACE": "enable"
+            }
         },
         {
             "type": "swift",
@@ -19,8 +19,9 @@
             "args": [],
             "cwd": "${workspaceFolder:Swift-Repo}",
             "name": "Debug Swift-Repo",
-            "program": "${workspaceFolder:Swift-Repo}/.build/debug/Swift-Repo",
-            "preLaunchTask": "swift: Build Debug Swift-Repo"
+            "preLaunchTask": "swift: Build Debug Swift-Repo",
+            "target": "Swift-Repo",
+            "configuration": "debug"
         },
         {
             "type": "swift",
@@ -28,8 +29,9 @@
             "args": [],
             "cwd": "${workspaceFolder:Swift-Repo}",
             "name": "Release Swift-Repo",
-            "program": "${workspaceFolder:Swift-Repo}/.build/release/Swift-Repo",
-            "preLaunchTask": "swift: Build Release Swift-Repo"
+            "preLaunchTask": "swift: Build Release Swift-Repo",
+            "target": "Swift-Repo",
+            "configuration": "release"
         }
     ]
 }

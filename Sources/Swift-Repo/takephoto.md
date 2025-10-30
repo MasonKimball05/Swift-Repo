@@ -66,10 +66,3 @@ class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
         photoCaptured = true
     }
 }
-
-let photoTaker = takephoto()
-if photoTaker.setupSession() {
-    photoTaker.capturePhoto()
-} else {
-    print("❌ Failed to set up camera session")
-}
