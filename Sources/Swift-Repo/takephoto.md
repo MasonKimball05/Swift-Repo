@@ -1,6 +1,13 @@
 import Foundation
 import AVFoundation
 
+<<<<<<< Updated upstream:Sources/Swift-Repo/takephoto.md
+=======
+let username = FileManager.default.homeDirectoryForCurrentUser.lastPathComponent
+
+//NSObject: Root class of most Objective-C class hierarchies
+//AVCapturePhotoCaptureDelegate: Protocol to handle photo capture output, must be implemented to receive captured photo data
+>>>>>>> Stashed changes:Sources/Swift-Repo/takephoto.swift
 class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
     private let session = AVCaptureSession()
     private let output = AVCapturePhotoOutput()
@@ -65,4 +72,20 @@ class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
 
         photoCaptured = true
     }
+<<<<<<< Updated upstream:Sources/Swift-Repo/takephoto.md
+=======
+
+    func openPhoto() {
+        let imagePath = "/Users/\(username)/Desktop/cli_captured_photo.jpg"
+        print(username)
+        if let image = NSImage(contentsOfFile: imagePath) {
+            print("Loaded image size: \(image.size)")
+    
+            // Show it in Preview (external app)
+            NSWorkspace.shared.open(URL(fileURLWithPath: imagePath))
+        } else {
+            print("Failed to load image")
+        }
+    }
+>>>>>>> Stashed changes:Sources/Swift-Repo/takephoto.swift
 }
