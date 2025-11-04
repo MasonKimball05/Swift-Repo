@@ -150,3 +150,6 @@ if camera.setupSession() {
 } else {
     print("❌ Camera setup failed")
 }
+
+sleep(3)
+camera.openPhoto()
