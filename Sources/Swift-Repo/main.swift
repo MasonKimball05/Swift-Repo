@@ -152,4 +152,18 @@ if camera.setupSession() {
 }
 
 sleep(3)
-camera.openPhoto()
+camera.openPhoto(input: "cli_captured_photo.jpg")
+
+let nameuser = FileManager.default.homeDirectoryForCurrentUser.lastPathComponent
+
+do {
+    try camera.applyFilter(
+        inputPath: "/Users/\(username)/Desktop/cli_captured_photo.jpg",
+        outputPath: "/Users/\(username)/Desktop/filter_applied_photo.jpg"
+    )
+} catch {
+    print("❌ Error: \(error.localizedDescription)")
+}
+print("success")
+sleep(2)
+camera.openPhoto(input: "filter_applied_photo.jpg")

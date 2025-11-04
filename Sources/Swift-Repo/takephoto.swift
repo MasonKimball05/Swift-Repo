@@ -1,6 +1,10 @@
 import Foundation
 import AVFoundation //Library for camera access
 import AppKit //Library for macOS GUI elements
+import CoreImage //Library for image processing
+import CoreImage.CIFilterBuiltins //Built-in filters for Core Image
+import ImageIO //Library for image input/output
+import UniformTypeIdentifiers //Library for handling uniform type identifiers
 
 let username = FileManager.default.homeDirectoryForCurrentUser.lastPathComponent
 
@@ -75,8 +79,8 @@ class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
         photoCaptured = true
     }
 
-    func openPhoto() {
-        let imagePath = "/Users/\(username)/Desktop/cli_captured_photo.jpg"
+    func openPhoto(input: String) {
+        let imagePath = "/Users/\(username)/Desktop/\(input)"
         if let image = NSImage(contentsOfFile: imagePath) {
             print("Loaded image size: \(image.size)")
     
@@ -86,6 +90,42 @@ class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
             print("Failed to load image")
         }
     }
+
+    func applyFilter(inputPath: String, outputPath: String) throws {
+        let inputURL = URL(fileURLWithPath: inputPath)
+        let outputURL = URL(fileURLWithPath: outputPath)
+
+        // 1. Load image
+        guard let inputImage = CIImage(contentsOf: inputURL) else {
+            throw NSError(domain: "FilterApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not load image"])
+        }
+
+        // 2. Create filter
+        let filter = CIFilter.sepiaTone()
+        filter.inputImage = inputImage
+        filter.intensity = 0.8
+
+        guard let outputImage = filter.outputImage else {
+            throw NSError(domain: "FilterApp", code: 2, userInfo: [NSLocalizedDescriptionKey: "Filter failed"])
+        }
+
+        // 3. Render output
+        let context = CIContext()
+
+        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
+            throw NSError(domain: "FilterApp", code: 3, userInfo: [NSLocalizedDescriptionKey: "Could not render output"])
+        }
+
+        // 4. Save to file (JPEG)
+        guard let destination = CGImageDestinationCreateWithURL(outputURL as CFURL, UTType.jpeg.identifier as CFString, 1, nil) else {
+            throw NSError(domain: "FilterApp", code: 4, userInfo: [NSLocalizedDescriptionKey: "Could not create output destination"])
+        }
+
+        CGImageDestinationAddImage(destination, cgImage, nil)
+        CGImageDestinationFinalize(destination)
+        print("✅ Saved filtered image to \(outputPath)")
+    }
+
 }
 
 
