@@ -2,6 +2,8 @@ import Foundation
 import AVFoundation //Library for camera access
 import AppKit //Library for macOS GUI elements
 
+let username = FileManager.default.homeDirectoryForCurrentUser.lastPathComponent
+
 //NSObject: Root class of most Objective-C class hierarchies
 //AVCapturePhotoCaptureDelegate: Protocol to handle photo capture output, must be implemented to receive captured photo data
 class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
@@ -74,7 +76,7 @@ class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
     }
 
     func openPhoto() {
-        let imagePath = "/Users/jakemasaschi/Desktop/cli_captured_photo.jpg"
+        let imagePath = "/Users/\(username)/Desktop/cli_captured_photo.jpg"
         if let image = NSImage(contentsOfFile: imagePath) {
             print("Loaded image size: \(image.size)")
     
