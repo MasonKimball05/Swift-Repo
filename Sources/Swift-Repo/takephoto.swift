@@ -8,41 +8,114 @@ let username = FileManager.default.homeDirectoryForCurrentUser.lastPathComponent
 //AVCapturePhotoCaptureDelegate: Protocol to handle photo capture output, must be implemented to receive captured photo data
 class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
     //Define a session and output for capturing photos
-    private let session = AVCaptureSession()
-    private let output = AVCapturePhotoOutput()
-    private var photoCaptured = false //Determine if the photo has been captured
+    public let session = AVCaptureSession()
+    public let output = AVCapturePhotoOutput()
+    public var photoCaptured = false //Determine if the photo has been captured
+    public var previewLayer: AVCaptureVideoPreviewLayer?
+    public var isPreviewing = false
+    public var previewCompletionHandler: (() -> Void)?
 
     func setupSession() -> Bool { //Returns true if session is set up correctly
         session.sessionPreset = .photo //Set session preset to photo quality
         //Guard: ensures that the input device and output can be added to the session
         guard let device = AVCaptureDevice.default(for: .video),
               let input = try? AVCaptureDeviceInput(device: device),
-              session.canAddInput(input),
-              session.canAddOutput(output) else { //Else block if any of the above fail
+              session.canAddInput(input) else { //Else block if any of the above fail
             print("❌ Unable to configure camera")
             return false
         }
 
         session.addInput(input)
-        session.addOutput(output)
+        
+        if session.canAddOutput(output) {
+            session.addOutput(output)
+            print("⚙️ Output added successfully")
+        } else {
+            print("⚠️ Could not add photo output to session")
+            return false
+        }
+        
+        if let previewLayer = previewLayer {
+            previewLayer.session = session
+        }
+        
         return true
+    }
+    
+func showCameraPreview(in view: NSView, completion: @escaping () -> Void) {
+    if previewLayer == nil {
+        previewLayer = AVCaptureVideoPreviewLayer(session: session)
+    }
+    guard let previewLayer = previewLayer else { return }
+
+    previewLayer.videoGravity = .resizeAspectFill
+    previewLayer.needsDisplayOnBoundsChange = true
+    previewLayer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
+
+    // Ensure the view has a backing layer
+    if view.layer == nil {
+        view.wantsLayer = true
+    }
+    guard let hostLayer = view.layer else {
+        print("❌ Could not create host layer for preview")
+        return
+    }
+
+    // Now that hostLayer exists, match the preview layer to its bounds
+    previewLayer.frame = hostLayer.bounds
+
+    // Safely check sublayers without force-unwrapping
+    let alreadyAdded = hostLayer.sublayers?.contains(where: { $0 === previewLayer }) ?? false
+    if !alreadyAdded {
+        hostLayer.addSublayer(previewLayer)
+    }
+
+    if !session.isRunning {
+        session.startRunning()
+        print("🎥 Session running: \(session.isRunning)")
+    }
+
+    isPreviewing = true
+    previewCompletionHandler = completion
+
+    // Hold here until preview is stopped or photo is triggered
+    while isPreviewing {
+        RunLoop.current.run(mode: .default, before: Date().addingTimeInterval(0.1))
+    }
+}
+    
+    func stopPreview() {
+        if session.isRunning {
+            session.stopRunning()
+            print("🎥 Session running: \(session.isRunning)")
+        }
+        if let previewLayer = previewLayer, let superlayer = previewLayer.superlayer {
+            previewLayer.removeFromSuperlayer()
+        }
+        isPreviewing = false
+        previewCompletionHandler?()
+        previewCompletionHandler = nil
+    }
+
+    func triggerPhotoCapture() {
+        // Called when user presses the button to take the picture
+        stopPreview()
+        capturePhoto()
     }
 
     func capturePhoto() {
-        session.startRunning() //Start the session
         print("📷 Camera warming up...")
         Thread.sleep(forTimeInterval: 1.0) //Wait for a second to let the camera warm up, else photo will be black
         print("📷 Capturing photo...")
 
         let settings = AVCapturePhotoSettings()
+        photoCaptured = false
         output.capturePhoto(with: settings, delegate: self)
 
         // Keep the run loop alive until photoCaptured = true
         while !photoCaptured {
             RunLoop.current.run(mode: .default, before: Date().addingTimeInterval(0.1)) 
         }
-
-        session.stopRunning()
     }
 
     func photoOutput(_ output: AVCapturePhotoOutput,
@@ -87,6 +160,8 @@ class takephoto: NSObject, AVCapturePhotoCaptureDelegate {
             print("Failed to load image")
         }
     }
+
+    @objc func buttonPressed(_ sender: Any?) {
+        triggerPhotoCapture()
+    }
 }
-
-
